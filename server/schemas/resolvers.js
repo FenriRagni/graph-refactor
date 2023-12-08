@@ -5,7 +5,9 @@ const resolvers = {
   Query: {
     me: async(parent, args, context) => {
       if (context.user) {
-        return User.fineOne({ _id: context.user._id });
+        const user = User.fineOne({ email: context.user._id }).select('-__v -password');
+        console.log(user);
+        return user;
       }
       throw AuthenticationError;
     }
