@@ -3,11 +3,12 @@ const typeDefs=`
     _id: ID
     username: String
     email: String
+    bookCount: Int
     savedBooks: [Book]
   }
 
   type Book {
-    bookId: [String]!
+    bookId: ID!
     authors: [String]
     description: String
     image: String
@@ -28,7 +29,7 @@ const typeDefs=`
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
     saveBook(authors: [String], description: String, title: String, bookId: String, image: String): User
-    removeBook(bookId: String!): User
+    removeBook(bookId: ID!): User
   }
  `;
 

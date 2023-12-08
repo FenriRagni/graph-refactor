@@ -28,8 +28,9 @@ const SearchBooks = () => {
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
+    console.log('useEffect',savedBookIds);
     return () => saveBookIds(savedBookIds);
-  });
+  }, [savedBookIds]);
 
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
@@ -42,7 +43,7 @@ const SearchBooks = () => {
     try {
       const response = await searchGoogleBooks(searchInput);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error('something went wrong!');
       }
 
@@ -77,7 +78,6 @@ const SearchBooks = () => {
 
     try {
       console.log('bookToSave', bookToSave);
-      console.log('bookID is ', typeof bookToSave.bookId)
       const response = await saveBook({ variables: {...bookToSave}
       });
 
@@ -86,6 +86,8 @@ const SearchBooks = () => {
       }
 
       // if book successfully saves to user's account, save book id to state
+      console.log('saving books', savedBookIds);
+      console.log('passingthrough', [...savedBookIds, bookToSave.bookId]);
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);

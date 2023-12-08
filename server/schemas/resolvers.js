@@ -5,7 +5,6 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        console.log('user', context.user);
         const data = await User.findOne({ _id: context.user._id }).select('-__v -password');
         return  data ;
       }
@@ -37,7 +36,6 @@ const resolvers = {
     },
 
     saveBook: async (parent, args, context) => {
-      console.log('authors?', args);
       if (context.user) {
         return User.findOneAndUpdate(
           { _id: context.user._id },
@@ -52,7 +50,9 @@ const resolvers = {
 
     removeBook: async (parent, args, context) => {
       if (context.user) {
-        return User.findOneAndUpdate(
+        console.log('user', context.user);
+        console.log('args', args);
+        return await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { savedBooks: { bookId: args.bookId }}},
           { new: true }

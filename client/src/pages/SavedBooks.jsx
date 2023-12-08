@@ -1,4 +1,4 @@
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Card,
@@ -13,18 +13,21 @@ import { useMutation, useQuery } from '@apollo/client';
 
 // import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
-import { removeBookId } from '../utils/localStorage';
+import { getSavedBookIds, removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
+  const [savedBookId, setSavedBookIds] = useState(getSavedBookIds());
   const { loading, data } = useQuery(GET_ME);
   const [removeBook ] = useMutation(REMOVE_BOOK);
 
   // use this to determine if `useEffect()` hook needs to run again
   const userData = data?.me || {};
   // const userDataLength = Object.keys(userData).length;
-  console.log(userData);
 
+  useEffect(() => {
+    
+  }, [userData.savedBooks?.length])
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -35,11 +38,13 @@ const SavedBooks = () => {
     }
 
     try {
+
+      console.log('bookId', bookId, 'typeOf', typeof bookId)
       const response = await removeBook({
-        variables: { bookId}
+        variables: { bookId }
       });
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error('something went wrong!');
       }
 
@@ -66,12 +71,12 @@ const SavedBooks = () => {
       </div>
       <Container>
         <h2 className='pt-5'>
-          {userData.savedBooks?.length
+          {userData.savedBooks.length
             ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks?.map((book) => {
+          {userData.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>
